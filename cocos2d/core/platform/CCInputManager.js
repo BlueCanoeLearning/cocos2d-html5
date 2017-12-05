@@ -408,6 +408,17 @@ cc.inputManager = /** @lends cc.inputManager# */{
         var selfPointer = this;
         var supportMouse = ('mouse' in cc.sys.capabilities), supportTouches = ('touches' in cc.sys.capabilities);
 
+        var supportsPassive = false;
+        try {
+            var opts = Object.defineProperty({}, 'passive', {
+                get: function () {
+                    supportsPassive = true;
+                }
+            });
+            window.addEventListener("testPassive", null, opts);
+            window.removeEventListener("testPassive", null, opts);
+        } catch (e) { }
+
         //HACK
         //  - At the same time to trigger the ontouch event and onmouse event
         //  - The function will execute 2 times
@@ -442,7 +453,7 @@ cc.inputManager = /** @lends cc.inputManager# */{
                     mouseEvent.setButton(event.button);
                     cc.eventManager.dispatchEvent(mouseEvent);
                 }
-            }, false);
+            }, supportsPassive ? { passive: true } : false);
 
             //register canvas mouse event
             element.addEventListener("mousedown", function (event) {
@@ -459,9 +470,9 @@ cc.inputManager = /** @lends cc.inputManager# */{
                 cc.eventManager.dispatchEvent(mouseEvent);
 
                 event.stopPropagation();
-                event.preventDefault();
+                !supportsPassive && event.preventDefault();
                 element.focus();
-            }, false);
+            }, supportsPassive ? { passive: true } : false);
 
             element.addEventListener("mouseup", function (event) {
                 if (prohibition) return;
@@ -477,8 +488,8 @@ cc.inputManager = /** @lends cc.inputManager# */{
                 cc.eventManager.dispatchEvent(mouseEvent);
 
                 event.stopPropagation();
-                event.preventDefault();
-            }, false);
+                !supportsPassive && event.preventDefault();
+            }, supportsPassive ? { passive: true } : false);
 
             element.addEventListener("mousemove", function (event) {
                 if (prohibition) return;
@@ -496,8 +507,8 @@ cc.inputManager = /** @lends cc.inputManager# */{
                 cc.eventManager.dispatchEvent(mouseEvent);
 
                 event.stopPropagation();
-                event.preventDefault();
-            }, false);
+                !supportsPassive && event.preventDefault();
+            }, supportsPassive ? { passive: true } : false);
 
             element.addEventListener("mousewheel", function (event) {
                 var pos = selfPointer.getHTMLElementPosition(element);
@@ -509,8 +520,8 @@ cc.inputManager = /** @lends cc.inputManager# */{
                 cc.eventManager.dispatchEvent(mouseEvent);
 
                 event.stopPropagation();
-                event.preventDefault();
-            }, false);
+                !supportsPassive && event.preventDefault();
+            }, supportsPassive ? { passive: true } : false);
 
             /* firefox fix */
             element.addEventListener("DOMMouseScroll", function (event) {
@@ -523,8 +534,8 @@ cc.inputManager = /** @lends cc.inputManager# */{
                 cc.eventManager.dispatchEvent(mouseEvent);
 
                 event.stopPropagation();
-                event.preventDefault();
-            }, false);
+                !supportsPassive && event.preventDefault();
+            }, supportsPassive ? { passive: true } : false);
         }
 
         if (window.navigator.msPointerEnabled) {
@@ -544,7 +555,7 @@ cc.inputManager = /** @lends cc.inputManager# */{
 
                         _touchEvent.call(selfPointer, [selfPointer.getTouchByXY(event.clientX, event.clientY, pos)]);
                         event.stopPropagation();
-                    }, false);
+                    }, supportsPassive ? { passive: true } : false);
                 })(eventName, _pointerEventsMap[eventName]);
             }
         }
@@ -559,9 +570,9 @@ cc.inputManager = /** @lends cc.inputManager# */{
                 pos.top -= document.body.scrollTop;
                 selfPointer.handleTouchesBegin(selfPointer.getTouchesByEvent(event, pos));
                 event.stopPropagation();
-                event.preventDefault();
+                !supportsPassive && event.preventDefault();
                 element.focus();
-            }, false);
+            }, supportsPassive ? { passive: true } : false);
 
             element.addEventListener("touchmove", function (event) {
                 if (!event.changedTouches) return;
@@ -571,8 +582,8 @@ cc.inputManager = /** @lends cc.inputManager# */{
                 pos.top -= document.body.scrollTop;
                 selfPointer.handleTouchesMove(selfPointer.getTouchesByEvent(event, pos));
                 event.stopPropagation();
-                event.preventDefault();
-            }, false);
+                !supportsPassive && event.preventDefault();
+            }, supportsPassive ? { passive: true } : false);
 
             element.addEventListener("touchend", function (event) {
                 if (!event.changedTouches) return;
@@ -582,8 +593,8 @@ cc.inputManager = /** @lends cc.inputManager# */{
                 pos.top -= document.body.scrollTop;
                 selfPointer.handleTouchesEnd(selfPointer.getTouchesByEvent(event, pos));
                 event.stopPropagation();
-                event.preventDefault();
-            }, false);
+                !supportsPassive && event.preventDefault();
+            }, supportsPassive ? { passive: true } : false);
 
             element.addEventListener("touchcancel", function (event) {
                 if (!event.changedTouches) return;
@@ -593,8 +604,8 @@ cc.inputManager = /** @lends cc.inputManager# */{
                 pos.top -= document.body.scrollTop;
                 selfPointer.handleTouchesCancel(selfPointer.getTouchesByEvent(event, pos));
                 event.stopPropagation();
-                event.preventDefault();
-            }, false);
+                !supportsPassive && event.preventDefault();
+             }, supportsPassive ? { passive: true } : false);
         }
 
         //register keyboard event
