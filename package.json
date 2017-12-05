@@ -1,0 +1,12 @@
+{
+    "name": "cocos2d-html",
+    "version": "3.16.0",
+    "private": true,
+    "description": "Cocos2d-html5",
+    "scripts": {
+        "prebuild": "rm -rf lib",
+        "build": "ant -f tools/build.xml"
+    },
+    "dependencies": {},
+    "devDependencies": {}
+}
