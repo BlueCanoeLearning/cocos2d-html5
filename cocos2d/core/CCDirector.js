@@ -167,9 +167,6 @@ cc.Director = cc.Class.extend(/** @lends cc.Director# */{
             this._deltaTime = (now - this._lastUpdate) / 1000;
         }
 
-        if ((cc.game.config[cc.game.CONFIG_KEY.debugMode] > 0) && (this._deltaTime > 0.2))
-            this._deltaTime = 1 / 60.0;
-
         this._lastUpdate = now;
     },
 
