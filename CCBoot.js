@@ -2096,6 +2096,9 @@ var _initSys = function () {
      * @return {Number}
      */
     sys.now = function () {
+        if (window.performance.now) {
+            return window.performance.now() + window.performance.timing.navigationStart;
+        }
         if (Date.now) {
             return Date.now();
         }

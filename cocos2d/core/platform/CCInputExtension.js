@@ -121,7 +121,7 @@ _p.didAccelerate = function (eventData) {
     mAcceleration.y = y;
     mAcceleration.z = z;
 
-    mAcceleration.timestamp = eventData.timeStamp || Date.now();
+    mAcceleration.timestamp = eventData.timeStamp || (window.performance.now ? window.performance.now() + window.performance.timing.navigationStart : Date.now());
 
     var tmpX = mAcceleration.x;
     if(w.orientation === cc.UIInterfaceOrientationLandscapeRight){
